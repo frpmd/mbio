@@ -1,0 +1,17 @@
+{
+  "name": "mbio",
+  "version": "1.0.0",
+  "description": "Mercedes-Benz.io QA Challenge",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.10.0"
+  },
+  "dependencies": {
+    "fast-csv": "^4.3.6"
+  }
+}
