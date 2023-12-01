@@ -7,7 +7,8 @@ export class SelectLocationHomepage {
     readonly selectStateDropdown: Locator;
     readonly postalCodeInput: Locator;
     readonly purposeRadio: Locator;
-    readonly continueButton: Locator;
+    readonly continueButton: Locator;    
+    readonly loadingSpinner: Locator;
 
     // Initialize selectors using a constructor
     constructor(page:Page) {
@@ -17,12 +18,14 @@ export class SelectLocationHomepage {
         this.postalCodeInput = page.getByText('* Postal Code');
         this.purposeRadio = page.getByText('Private').first();
         this.continueButton = page.getByRole('button', { name: 'Continue' });
+        this.loadingSpinner = page.locator('.dcp-loader--hide');
     }
 
     // Method to visit the Mercedes-Benz Shop Australia page 
     async visit(){
         await this.page.goto('https://shop.mercedes-benz.com/en-au/shop/vehicle/srp/demo');
-        await this.agreeToAllCookiesButton.waitFor();
+        await expect(this.loadingSpinner).toHaveCSS('opacity', '0', {timeout: 30000});
+        //await this.agreeToAllCookiesButton.waitFor({timeout: 30000});
     }
 
     // Method that accept the cookies policy

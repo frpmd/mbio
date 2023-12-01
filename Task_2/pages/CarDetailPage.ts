@@ -1,7 +1,8 @@
 import { Locator, Page } from "@playwright/test";
 import { writeToPath } from "fast-csv";
 
-export class ProductPage {
+// Class where are defined all the locators and methods for the car detail page
+export class CarDetailPage {
     // Define selectors
     readonly page: Page;
     readonly enquireNowButton: Locator;

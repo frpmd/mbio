@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 
+// Class where are defined all the locators and methods for the contact information modal
 export class ContactInformationModal {
     // Define selectors
     readonly page: Page;
@@ -28,17 +29,20 @@ export class ContactInformationModal {
         this.errorMessage = page.locator('.dcp-error-message');
     }
 
-    async fillEnquireForm(){
-        await this.firstName.fill('Fábio');
-        await this.lastName.fill('Dias');
-        await this.email.fill('mail.com');
-        await this.phone.fill('0441234567');
+    // Method to fill in all the required fields from the enquire form
+    async fillEnquireForm(firstName: string, lastName: string, email: string, phone: string, postalCode: string){
+        await this.firstName.fill(firstName);
+        await this.lastName.fill(lastName);
+        await this.email.fill(email);
+        await this.phone.fill(phone);
         await expect(this.emailErrorMessage).toHaveText('Please enter a valid email address using a minimum of six characters.');
-        await this.postalCode.fill('2007');
+        await this.postalCode.fill(postalCode);
         await this.privacyCheck.check();
+        await this.page.pause();
     }
 
-    async submitEnquireForm(){        
+    // Method to submit the enquire form and validate the error
+    async submitEnquireFormWithError(){        
         await this.proceedButton.click();        
         await expect(this.errorMessage).toBeVisible();
     }
