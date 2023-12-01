@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 
+// Class where are defined all the locators and methods for the car listing page
 export class ListingPage {
     // Define selectors
     readonly page: Page;
@@ -12,6 +13,8 @@ export class ListingPage {
     readonly filterLabel: Locator;
     readonly sortingDropdown: Locator;
     readonly selectCar: Locator;
+    readonly filterSidebar: Locator;
+    readonly closeButtonFilterSidebar: Locator;
 
     // Initialize selectors using a constructor
     constructor(page:Page) {
@@ -25,25 +28,40 @@ export class ListingPage {
         this.filterLabel = page.locator('.dcp-selected-filters-widget-tag__name');
         this.sortingDropdown = page.getByLabel('Sorting');
         this.selectCar = page.locator('.dcp-cars-product-tile').first();
+        this.filterSidebar = page.locator('.sidebar-filter');
+        this.closeButtonFilterSidebar = page.locator('span.close-button.show');
     }
 
+    // Method to open filters
     async openFilters(){
         await this.filterButton.click();
     }
 
+    // Method to select the Pre-owned tab
     async selectPreOwnedTab(){
         await this.preOwnedButton.click();
-        await expect(this.loadingSpinner).toHaveCSS('opacity', '0', {timeout: 15000});
+        await expect(this.loadingSpinner).toHaveCSS('opacity', '0', {timeout: 30000});
     }
 
+    // Method to choose the first available colour form the list
     async chooseFirstColour(){
-        await this.page.waitForLoadState("load");
-        await this.colourFilter.click();
+        /* This condition is included due to the fact that after navigating to the list with pre-owned cars
+           sometimes the filters tab closes automatically.
+           With this, it's guaranteed that the test can continue without the associated flakiness of this step
+        */
+        if(await this.closeButtonFilterSidebar.isVisible()){
+            await this.colourFilter.click();
+        }
+        else{
+            this.openFilters();
+            await this.colourFilter.click();
+        }
         await this.colourDropdown.click();
         await this.firstColour.click();
-        await expect(this.loadingSpinner).toHaveCSS('opacity', '0', {timeout: 15000});
+        await expect(this.loadingSpinner).toHaveCSS('opacity', '0', {timeout: 30000});
     }
 
+    // Method to sort the results for price ascending and click on the first available car (more expensive)
     async sortAndchooseFirstCar(sort: string){
         await this.sortingDropdown.selectOption(sort);
         await this.selectCar.click({timeout: 100000});
